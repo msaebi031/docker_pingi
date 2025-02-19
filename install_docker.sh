@@ -1,19 +1,13 @@
 #!/bin/bash
 
-# شناسایی توزیع سیستم‌عامل
-if [ -f /etc/os-release ]; then
-    . /etc/os-release
-    OS_NAME=$ID
-    OS_VERSION=$VERSION_ID
-else
-    OS_NAME=$(uname -s)
-    OS_VERSION=""
-fi
+# شناسایی توزیع سیستم‌عامل از دستور lsb_release
+OS_NAME=$(lsb_release -i | awk '{print $3}')
+OS_VERSION=$(lsb_release -r | awk '{print $2}')
 
 # تابع نصب Docker براساس سیستم‌عامل
 install_docker() {
     case $OS_NAME in
-        "ubuntu")
+        "Ubuntu")
             if [[ $(echo "$OS_VERSION >= 20.04" | bc) -eq 1 ]]; then
                 sudo apt update
                 sudo apt install -y docker.io
@@ -21,7 +15,7 @@ install_docker() {
                 echo "Ubuntu version is below 20.04, Docker installation is not supported."
             fi
             ;;
-        "debian")
+        "Debian")
             if [[ $(echo "$OS_VERSION >= 11" | bc) -eq 1 ]]; then
                 sudo apt update
                 sudo apt install -y docker.io
@@ -29,41 +23,41 @@ install_docker() {
                 echo "Debian version is below 11, Docker installation is not supported."
             fi
             ;;
-        "centos")
+        "CentOS")
             if [[ $(echo "$OS_VERSION >= 8" | bc) -eq 1 ]]; then
                 sudo yum install -y docker
             else
                 echo "CentOS version is below 8, Docker installation is not supported."
             fi
             ;;
-        "fedora")
+        "Fedora")
             if [[ $(echo "$OS_VERSION >= 36" | bc) -eq 1 ]]; then
                 sudo dnf install -y docker
             else
                 echo "Fedora version is below 36, Docker installation is not supported."
             fi
             ;;
-        "arch")
+        "Arch")
             sudo pacman -S --noconfirm docker
             ;;
-        "manjaro")
+        "Manjaro")
             sudo pacman -S --noconfirm docker
             ;;
-        "almalinux")
+        "AlmaLinux")
             if [[ $(echo "$OS_VERSION >= 8.0" | bc) -eq 1 ]]; then
                 sudo dnf install -y docker
             else
                 echo "AlmaLinux version is below 8.0, Docker installation is not supported."
             fi
             ;;
-        "rocky")
+        "Rocky")
             if [[ $(echo "$OS_VERSION >= 8" | bc) -eq 1 ]]; then
                 sudo dnf install -y docker
             else
                 echo "Rocky Linux version is below 8, Docker installation is not supported."
             fi
             ;;
-        "oracle")
+        "Oracle")
             if [[ $(echo "$OS_VERSION >= 8" | bc) -eq 1 ]]; then
                 sudo dnf install -y docker
             else
